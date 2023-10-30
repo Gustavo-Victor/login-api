@@ -1,5 +1,5 @@
 {
-  "name": "login-node",
+  "name": "login-api",
   "version": "1.0.0",
   "description": "A Login app made using node.js, express, mongoose and JWT",
   "main": "index.js",
