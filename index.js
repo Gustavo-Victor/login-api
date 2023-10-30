@@ -2,7 +2,8 @@ import express from "express";
 import bycript from "bcrypt"; 
 import jwt from "jsonwebtoken"; 
 import mongoose from "mongoose";
-import { config } from "dotenv"; 
+import { config } from "dotenv";
+import { User } from "./models/User.js"; 
 // import "./db.js"; 
 
 config(); 
@@ -24,6 +25,27 @@ app.post("/auth/register", async(req, res) => {
     //validation
     if(!name) {
         res.status(422).json({message: "Name is required"}); 
+        return ; 
+    }
+
+    if(!email) {
+        res.status(422).json({message: "Email is required"}); 
+        return ; 
+    }
+
+    if(!password) {
+        res.status(422).json({message: "Password is required"}); 
+        return ; 
+    }
+
+    if(!confirmPassword) {
+        res.status(422).json({message: "Confirm password is required"}); 
+        return ; 
+    }
+
+    if(password !== confirmPassword) {
+        res.status(422).json({message: "Passwords don't match"}); 
+        return ; 
     }
 
     res.status(200).json({
