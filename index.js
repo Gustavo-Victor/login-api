@@ -1,9 +1,8 @@
 import express from "express"; 
 import bycript from "bcrypt"; 
 import jwt from "jsonwebtoken"; 
-import { config } from "dotenv";
+import "./db.js"; 
 
-config(); 
 const app = express(); 
 const { PORT } = process.env;
 
