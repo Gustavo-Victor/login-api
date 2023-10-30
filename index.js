@@ -1,5 +1,5 @@
 import express from "express"; 
-import bycript from "bcrypt"; 
+import bcrypt from "bcrypt"; 
 import jwt from "jsonwebtoken"; 
 import mongoose from "mongoose";
 import { config } from "dotenv";
@@ -48,14 +48,32 @@ app.post("/auth/register", async(req, res) => {
         return ; 
     }
 
-    res.status(200).json({
+    //check if user already exists
+    const userExists = await User.findOne({email: email}); 
+    if(userExists) {
+        res.json({message: "User already exists"}); 
+        return ; 
+    }
+
+    //create password hash 
+    const salt = await bcrypt.genSalt(12); 
+    const passwordHash = await bcrypt.hash(password, salt); 
+
+    //create new user
+    const userObj = new User({
         name, 
         email, 
-        password, 
-        confirmPassword, 
-        newProp: "ok"
+        password: passwordHash
     }); 
+    try {
+        const result = await userObj.save(); 
+        res.status(201).json({ message: `User created successfully!` });
+    } catch(error) {
+        console.log(error); 
+        res.status(500).json({message: `Failed to create user`}); 
+    }
 }); 
+
 
 //database connection
 mongoose.connect(`${DB_URI}`)
